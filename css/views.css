@@ -1,0 +1,361 @@
+/* ============================================================
+   Vistas de la aplicación
+   Dashboard · Tablero · Solicitudes · Catálogo · Reportes
+   ============================================================ */
+
+.view {
+    display: block;
+}
+
+/* ---------------- Accesos rápidos (dashboard) ---------------- */
+
+.quick-access {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.quick-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.quick-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.quick-card__icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    color: #ffffff;
+    font-size: 19px;
+    background: var(--color-primary);
+    border-radius: 12px;
+}
+
+.quick-card strong {
+    display: block;
+    font-size: 14px;
+}
+
+.quick-card div > span {
+    color: var(--color-text-secondary);
+    font-size: 12px;
+}
+
+/* ---------------- Listado en tabla (solicitudes) ---------------- */
+
+.table-card {
+    margin-bottom: 30px;
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.table-card--flush {
+    margin-bottom: 0;
+}
+
+/* ---------------- Toggle Kanban / Tabla ---------------- */
+.view-toggle {
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
+    background: #eef2f9;
+    border-radius: var(--radius-sm);
+}
+
+.view-toggle__btn {
+    padding: 7px 13px;
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.view-toggle__btn:hover {
+    color: var(--color-primary);
+}
+
+.view-toggle__btn--active {
+    color: var(--color-primary);
+    background: #ffffff;
+    box-shadow: var(--shadow-sm);
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    min-width: 960px;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    padding: 13px 16px;
+    color: var(--color-text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-align: left;
+    text-transform: uppercase;
+    background: #f7f9fd;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.data-table td {
+    padding: 13px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+}
+
+.data-table tbody tr {
+    transition: background var(--transition);
+}
+
+.data-table tbody tr:hover {
+    background: #f8faff;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.data-table td strong {
+    display: block;
+    font-size: 13px;
+}
+
+.data-table__sub {
+    color: var(--color-text-light);
+    font-size: 11px;
+}
+
+.data-table__overdue {
+    color: var(--color-danger);
+    font-weight: 700;
+}
+
+.table-empty {
+    padding: 46px 20px;
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+.table-empty p {
+    margin-bottom: 16px;
+}
+
+/* ---------------- Chips de estado ---------------- */
+
+.status-chip {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #68758a;
+    background: #edf0f4;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.status-chip--pendiente {
+    color: #9a6a10;
+    background: #fdf3dd;
+}
+
+.status-chip--proceso {
+    color: #14548f;
+    background: #e3f0fb;
+}
+
+.status-chip--espera {
+    color: #6b46a8;
+    background: #f1e9fc;
+}
+
+.status-chip--resuelto {
+    color: #147954;
+    background: #e3f6ee;
+}
+
+.status-chip--cerrada {
+    color: #7a6410;
+    background: #f8f1dc;
+    border: 1px solid #e8d9a8;
+}
+
+.data-table__actions {
+    display: flex;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+/* ---------------- Catálogo de trámites ---------------- */
+
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.catalog-card {
+    padding: 22px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.catalog-card__icon {
+    color: var(--color-primary);
+    font-size: 22px;
+}
+
+.catalog-card h3 {
+    margin: 10px 0 12px;
+    font-size: 15px;
+}
+
+.catalog-card > strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 26px;
+    line-height: 1;
+}
+
+.catalog-card > span {
+    color: var(--color-text-light);
+    font-size: 11px;
+}
+
+.catalog-card .button {
+    margin-top: 14px;
+}
+
+/* ---------------- Reportes ---------------- */
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.report-card {
+    padding: 22px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.report-card h3 {
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.bar-row {
+    margin-bottom: 14px;
+}
+
+.bar-row:last-child {
+    margin-bottom: 0;
+}
+
+.bar-row__label {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+    color: var(--color-text-secondary);
+    font-size: 12px;
+}
+
+.bar-row__label strong {
+    color: var(--color-text);
+}
+
+.bar {
+    height: 8px;
+    overflow: hidden;
+    background: #edf0f6;
+    border-radius: 20px;
+}
+
+.bar__fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+}
+
+/* Barras por estado */
+.bar__fill--status-pendiente { background: var(--color-pending); }
+.bar__fill--status-proceso { background: var(--color-progress); }
+.bar__fill--status-espera { background: var(--color-waiting); }
+.bar__fill--status-resuelto { background: var(--color-resolved); }
+
+/* Barras por prioridad */
+.bar__fill--priority-urgente { background: var(--color-urgent); }
+.bar__fill--priority-alta { background: var(--color-high); }
+.bar__fill--priority-normal { background: var(--color-progress); }
+.bar__fill--priority-baja { background: var(--color-low); }
+
+/* Barras por trámite (tonos UAS) */
+.bar__fill--category-cartas { background: #003b8e; }
+.bar__fill--category-correcciones { background: #164686; }
+.bar__fill--category-desfase { background: #1b68ab; }
+.bar__fill--category-recibos { background: #1d70b8; }
+.bar__fill--category-especial { background: #b89d2b; }
+.bar__fill--category-otro { background: #7d899c; }
+
+/* ---------------- Botón pequeño ---------------- */
+
+.button--sm {
+    padding: 7px 12px;
+    font-size: 12px;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 1100px) {
+    .quick-access,
+    .catalog-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .report-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .quick-access,
+    .catalog-grid {
+        grid-template-columns: 1fr;
+    }
+}

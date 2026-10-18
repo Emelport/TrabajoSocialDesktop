@@ -1,0 +1,68 @@
+:root {
+    /* Paleta institucional UAS */
+    --uas-blue: #003b8e;
+    --uas-blue-dark: #002a63;
+    --uas-blue-mid: #164686;
+    --uas-blue-light: #1b68ab;
+    --uas-blue-accent: #1d70b8;
+    --uas-gold: #b89d2b;
+    --uas-gold-dark: #af8514;
+    --uas-gold-bright: #fdc800;
+    --uas-gradient-inferior: linear-gradient(90deg, rgba(0, 59, 126, 1) 0%, rgba(27, 104, 171, 1) 48%, rgba(29, 112, 184, 1) 100%);
+    --uas-gradient-superior: linear-gradient(90deg, rgba(33, 105, 172, 1) 0%, rgba(22, 70, 134, 1) 56%, rgba(22, 70, 134, 1) 100%);
+
+    /* Colores principales */
+    --color-primary: #003b8e;
+    --color-primary-dark: #002a63;
+    --color-primary-light: #e8f0fa;
+
+    --color-background: #f5f7fb;
+    --color-surface: #ffffff;
+    --color-border: #e4e8f0;
+
+    --color-text: #202b3c;
+    --color-text-secondary: #758197;
+    --color-text-light: #98a2b3;
+
+    /* Estados */
+    --color-pending: #e5a12b;
+    --color-progress: #1b68ab;
+    --color-waiting: #9366d8;
+    --color-resolved: #23a477;
+
+    /* Prioridades */
+    --color-urgent: #d92d20;
+    --color-high: #ed7d31;
+    --color-normal: #1b68ab;
+    --color-low: #7d899c;
+
+    /* Mensajes */
+    --color-danger: #d92d20;
+    --color-danger-light: #fff0ef;
+    --color-success: #16865d;
+    --color-success-light: #e9f8f0;
+
+    /* Tipografía */
+    --font-family: "Roboto", "Segoe UI", Arial, sans-serif;
+    --font-family-display: "Roboto Condensed", "Roboto", "Segoe UI", Arial, sans-serif;
+    --font-size-xs: 12px;
+    --font-size-sm: 13px;
+    --font-size-md: 14px;
+    --font-size-lg: 18px;
+    --font-size-xl: 25px;
+
+    /* Dimensiones */
+    --sidebar-width: 250px;
+    --topbar-height: 52px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+
+    /* Sombras */
+    --shadow-sm: 0 2px 8px rgba(26, 39, 68, 0.04);
+    --shadow-md: 0 8px 24px rgba(26, 39, 68, 0.08);
+    --shadow-modal: 0 20px 60px rgba(20, 32, 55, 0.20);
+
+    /* Transiciones */
+    --transition: 0.2s ease;
+}

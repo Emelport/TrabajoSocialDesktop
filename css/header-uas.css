@@ -1,0 +1,152 @@
+/* ============================================================
+   Header institucional UAS
+   Universidad Autónoma de Sinaloa · Trabajo Social
+   Los logos llegan a los bordes y se recortan con la inclinación
+   ============================================================ */
+
+.uas-header {
+    display: flex;
+    align-items: stretch;
+    gap: 24px;
+    min-height: 92px;
+    margin: 0 -30px;
+    padding: 0;
+    overflow: hidden;
+    background: var(--uas-gradient-superior);
+}
+
+/* --- Logos en tarjetas blancas inclinadas (altura completa, a ras de los bordes) --- */
+.uas-header__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0 26px;
+    background-color: #ffffff;
+    transform: skew(-10deg);
+    box-shadow: 0 4px 14px rgba(0, 20, 50, 0.25);
+}
+
+.uas-header__logo img {
+    width: auto;
+    height: 74px;
+    object-fit: contain;
+    transform: skew(10deg);
+}
+
+.uas-header__logo--right {
+    transform: skew(-20deg);
+}
+
+.uas-header__logo--right img {
+    height: 64px;
+    transform: skew(20deg);
+}
+
+/* --- Bloque de títulos --- */
+.uas-header__titles {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    padding: 12px 0;
+    color: #ffffff;
+    text-align: center;
+}
+
+.uas-header__titulo {
+    margin: 0;
+    font-family: var(--font-family-display);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.uas-header__subtitulo {
+    display: block;
+    margin-top: 2px;
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0.92;
+}
+
+.uas-header__universidad {
+    display: block;
+    margin-top: 5px;
+    color: var(--uas-gold-bright);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    text-indent: 5px;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 1200px) {
+    .uas-header {
+        margin: 0 -22px;
+    }
+
+    .uas-header__titulo {
+        font-size: 25px;
+        letter-spacing: 2px;
+    }
+
+    .uas-header__subtitulo {
+        font-size: 13px;
+    }
+
+    .uas-header__logo {
+        padding: 0 20px;
+    }
+
+    .uas-header__logo img {
+        height: 62px;
+    }
+
+    .uas-header__logo--right img {
+        height: 54px;
+    }
+}
+
+@media (max-width: 760px) {
+    .uas-header {
+        gap: 10px;
+        min-height: 0;
+        margin: 0 -15px;
+        padding: 0;
+    }
+
+    .uas-header__logo {
+        padding: 0 14px;
+    }
+
+    .uas-header__logo img {
+        height: 46px;
+    }
+
+    .uas-header__logo--right img {
+        height: 40px;
+    }
+
+    .uas-header__titulo {
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+    .uas-header__subtitulo {
+        font-size: 11px;
+    }
+
+    .uas-header__universidad {
+        font-size: 8px;
+        letter-spacing: 3px;
+        text-indent: 3px;
+    }
+}

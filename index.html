@@ -1,0 +1,517 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabajo Social | Control Escolar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/header-uas.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/kanban.css">
+    <link rel="stylesheet" href="css/views.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar__brand">
+                <div class="sidebar__logo">TS</div>
+                <div>
+                    <h2>Trabajo Social</h2>
+                    <span>Departamento de Control Escolar</span>
+                </div>
+            </div>
+
+            <nav class="sidebar__nav" aria-label="Navegación principal">
+                <span class="sidebar__label">GENERAL</span>
+                <a href="#/dashboard" data-view="dashboard" class="nav-item nav-item--active">⌂ Inicio</a>
+                <a href="#/tablero" data-view="tablero" class="nav-item">▦ Tablero Kanban</a>
+                <a href="#/solicitudes" data-view="solicitudes" class="nav-item">
+                    ☷ Solicitudes <span class="nav-item__badge" id="navTotal">0</span>
+                </a>
+
+                <span class="sidebar__label">CATÁLOGOS</span>
+                <a href="#/categorias" data-view="categorias" class="nav-item">◫ Tipos de trámite</a>
+                <a href="#/reportes" data-view="reportes" class="nav-item">▤ Reportes</a>
+            </nav>
+
+            <div class="sidebar__footer">
+                <div class="sidebar__status"></div>
+                <div>
+                    <strong>Modo local</strong>
+                    <span>Sin conexión a servidor</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main" id="inicio">
+            <header class="topbar">
+                <div class="topbar__left">
+                    <button type="button" class="icon-button" id="menuToggle"
+                        aria-label="Mostrar u ocultar menú">☰</button>
+                    <div class="breadcrumb">
+                        <span>Trabajo Social</span> / <strong id="breadcrumbSection">Inicio</strong>
+                    </div>
+                </div>
+
+                <div class="topbar__right">
+                    <span class="topbar__date" id="currentDate"></span>
+                    <div class="user-profile">
+                        <div class="user-profile__avatar">TS</div>
+                        <div class="user-profile__info">
+                            <strong>Personal administrativo</strong>
+                            <span>Control Escolar</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ==================== VISTA: DASHBOARD ==================== -->
+            <section class="view" id="view-dashboard">
+                <header class="uas-header">
+                    <div class="uas-header__logo uas-header__logo--left">
+                        <img src="assets/aguila.png" alt="Escudo UAS">
+                    </div>
+                    <div class="uas-header__titles">
+                        <h1 class="uas-header__titulo">Trabajo Social</h1>
+                        <span class="uas-header__subtitulo">Departamento de Control Escolar</span>
+                        <span class="uas-header__universidad">Universidad Autónoma de Sinaloa</span>
+                    </div>
+                    <div class="uas-header__logo uas-header__logo--right">
+                        <img src="assets/Logo_vision_de_futuro_2025.png" alt="Visión de Futuro 2025">
+                    </div>
+                </header>
+
+                <div class="page-header">
+                    <div>
+                        <span class="eyebrow">CENTRO DE OPERACIONES</span>
+                        <h1>Gestión de solicitudes</h1>
+                        <p>Administra, organiza y da seguimiento a los pendientes de Control Escolar.</p>
+                    </div>
+                    <button type="button" class="button button--primary js-new-request">
+                        + Nueva solicitud
+                    </button>
+                </div>
+
+            <section class="stats-grid" aria-label="Resumen de solicitudes">
+                <article class="stat-card">
+                    <div class="stat-card__top"><span>Total de solicitudes</span><span>▤</span></div>
+                    <strong id="statTotal">0</strong>
+                    <span class="stat-card__description">Solicitudes registradas</span>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-card__top"><span>Pendientes</span><span>◷</span></div>
+                    <strong id="statPending">0</strong>
+                    <span class="stat-card__description">Por atender</span>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-card__top"><span>En proceso</span><span>↻</span></div>
+                    <strong id="statProgress">0</strong>
+                    <span class="stat-card__description">En atención</span>
+                </article>
+
+                    <article class="stat-card">
+                        <div class="stat-card__top"><span>Resueltas</span><span>✓</span></div>
+                        <strong id="statResolved">0</strong>
+                        <span class="stat-card__description">Casos finalizados</span>
+                    </article>
+                </section>
+
+                <section class="quick-access" aria-label="Accesos rápidos">
+                    <a href="#/tablero" class="quick-card">
+                        <span class="quick-card__icon">▦</span>
+                        <div>
+                            <strong>Tablero Kanban</strong>
+                            <span>Organiza las solicitudes por estado</span>
+                        </div>
+                    </a>
+                    <a href="#/solicitudes" class="quick-card">
+                        <span class="quick-card__icon">☷</span>
+                        <div>
+                            <strong>Listado de solicitudes</strong>
+                            <span>Consulta y edita cada caso</span>
+                        </div>
+                    </a>
+                    <a href="#/reportes" class="quick-card">
+                        <span class="quick-card__icon">▤</span>
+                        <div>
+                            <strong>Reportes</strong>
+                            <span>Resumen por estado y trámite</span>
+                        </div>
+                    </a>
+                </section>
+            </section>
+
+            <!-- ==================== VISTA: TABLERO KANBAN ==================== -->
+            <section class="view" id="view-tablero" hidden>
+
+                <section class="workspace">
+                <div class="workspace__header">
+                    <div>
+                        <h2>Tablero de trabajo</h2>
+                        <p>Visualiza y organiza las solicitudes por estado.</p>
+                    </div>
+                    <span class="view-toggle" role="group" aria-label="Vista del tablero">
+                        <button type="button" class="view-toggle__btn view-toggle__btn--active"
+                            id="btnKanbanView" aria-pressed="true">▦ Kanban</button>
+                        <button type="button" class="view-toggle__btn"
+                            id="btnTableView" aria-pressed="false">☰ Tabla</button>
+                    </span>
+                </div>
+
+                <div class="toolbar">
+                    <label class="search-box">
+                        <span>⌕</span>
+                        <input type="search" id="searchInput"
+                            placeholder="Buscar alumno, matrícula o folio..." autocomplete="off">
+                    </label>
+
+                    <select id="filterCategory" aria-label="Filtrar por trámite">
+                        <option value="">Todos los trámites</option>
+                        <option value="cartas">Cartas y constancias</option>
+                        <option value="correcciones">Corrección de datos</option>
+                        <option value="desfase">Desfase académico</option>
+                        <option value="recibos">Recibos y pagos</option>
+                        <option value="especial">Casos especiales</option>
+                        <option value="otro">Otros trámites</option>
+                    </select>
+
+                    <select id="filterPriority" aria-label="Filtrar por prioridad">
+                        <option value="">Todas las prioridades</option>
+                        <option value="urgente">Urgente</option>
+                        <option value="alta">Alta</option>
+                        <option value="normal">Normal</option>
+                        <option value="baja">Baja</option>
+                    </select>
+
+                    <select id="sortOrder" aria-label="Ordenar solicitudes">
+                        <option value="recent">Más recientes</option>
+                        <option value="old">Más antiguas</option>
+                        <option value="due">Fecha límite</option>
+                        <option value="priority">Prioridad</option>
+                        <option value="name">Alfabético (A-Z)</option>
+                    </select>
+
+                    <button type="button" class="toggle-closed js-toggle-closed"
+                        id="toggleClosedBoard" title="Mostrar cerradas"
+                        aria-pressed="false">🗄 Cerradas</button>
+
+                    <button type="button" class="button button--secondary" id="clearFiltersBtn">
+                        Limpiar filtros
+                    </button>
+                </div>
+
+                <div class="kanban-board" id="kanbanBoard">
+                    <section class="kanban-column" data-status="pendiente">
+                        <header class="kanban-column__header">
+                            <div class="kanban-column__title">
+                                <span class="status-dot status-dot--pending"></span>
+                                <h3>Pendientes</h3>
+                                <span class="kanban-count" id="countPending">0</span>
+                            </div>
+                        </header>
+                        <div class="kanban-column__body" id="columnPending">
+                            <div class="kanban-empty"><p>No hay solicitudes pendientes</p></div>
+                        </div>
+                        <button type="button" class="add-card" data-new-status="pendiente">
+                            + Agregar solicitud
+                        </button>
+                    </section>
+
+                    <section class="kanban-column" data-status="proceso">
+                        <header class="kanban-column__header">
+                            <div class="kanban-column__title">
+                                <span class="status-dot status-dot--progress"></span>
+                                <h3>En proceso</h3>
+                                <span class="kanban-count" id="countProgress">0</span>
+                            </div>
+                        </header>
+                        <div class="kanban-column__body" id="columnProgress">
+                            <div class="kanban-empty"><p>No hay solicitudes en proceso</p></div>
+                        </div>
+                        <button type="button" class="add-card" data-new-status="proceso">
+                            + Agregar solicitud
+                        </button>
+                    </section>
+
+                    <section class="kanban-column" data-status="espera">
+                        <header class="kanban-column__header">
+                            <div class="kanban-column__title">
+                                <span class="status-dot status-dot--waiting"></span>
+                                <h3>En espera</h3>
+                                <span class="kanban-count" id="countWaiting">0</span>
+                            </div>
+                        </header>
+                        <div class="kanban-column__body" id="columnWaiting">
+                            <div class="kanban-empty"><p>No hay solicitudes en espera</p></div>
+                        </div>
+                        <button type="button" class="add-card" data-new-status="espera">
+                            + Agregar solicitud
+                        </button>
+                    </section>
+
+                    <section class="kanban-column" data-status="resuelto">
+                        <header class="kanban-column__header">
+                            <div class="kanban-column__title">
+                                <span class="status-dot status-dot--resolved"></span>
+                                <h3>Resueltas</h3>
+                                <span class="kanban-count" id="countResolved">0</span>
+                            </div>
+                        </header>
+                        <div class="kanban-column__body" id="columnResolved">
+                            <div class="kanban-empty"><p>No hay solicitudes resueltas</p></div>
+                        </div>
+                        <button type="button" class="add-card" data-new-status="resuelto">
+                            + Agregar solicitud
+                        </button>
+                    </section>
+
+                    <section class="kanban-column kanban-column--closed"
+                        id="columnClosedCard" data-status="cerrada" hidden>
+                        <header class="kanban-column__header">
+                            <div class="kanban-column__title">
+                                <span class="status-dot status-dot--closed"></span>
+                                <h3>Cerradas</h3>
+                                <span class="kanban-count" id="countClosed">0</span>
+                            </div>
+                        </header>
+                        <div class="kanban-column__body" id="columnClosed">
+                            <div class="kanban-empty"><p>No hay solicitudes cerradas</p></div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="table-card table-card--flush" id="workspaceTable" hidden>
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Alumno</th>
+                                    <th>Trámite</th>
+                                    <th>Prioridad</th>
+                                    <th>Estado</th>
+                                    <th>Responsable</th>
+                                    <th>Fecha límite</th>
+                                    <th aria-label="Acciones"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="workspaceTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-pagination" id="workspacePagination" hidden></div>
+
+                    <div class="table-empty" id="workspaceEmpty" hidden>
+                        <p>No hay solicitudes que coincidan con los filtros.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== VISTA: SOLICITUDES ==================== -->
+            <section class="view" id="view-solicitudes" hidden>
+                <div class="page-header">
+                    <div>
+                        <span class="eyebrow">EXPEDIENTES</span>
+                        <h1>Solicitudes registradas</h1>
+                        <p>Listado completo de casos. Selecciona uno para editar sus datos.</p>
+                    </div>
+                    <button type="button" class="button button--primary js-new-request">
+                        + Nueva solicitud
+                    </button>
+                </div>
+
+                <div class="toolbar toolbar--table">
+                    <button type="button" class="toggle-closed js-toggle-closed"
+                        id="toggleClosedTable" title="Mostrar cerradas"
+                        aria-pressed="false">🗄 Cerradas</button>
+
+                    <button type="button" class="button button--secondary" id="exportExcelBtn">
+                        ⤓ Exportar Excel
+                    </button>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Alumno</th>
+                                    <th>Trámite</th>
+                                    <th>Prioridad</th>
+                                    <th>Estado</th>
+                                    <th>Responsable</th>
+                                    <th>Fecha límite</th>
+                                    <th aria-label="Acciones"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="solicitudesTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-pagination" id="solicitudesPagination" hidden></div>
+
+                    <div class="table-empty" id="solicitudesEmpty" hidden>
+                        <p>No hay solicitudes registradas.</p>
+                        <button type="button" class="button button--primary js-new-request">
+                            + Crear la primera solicitud
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== VISTA: TIPOS DE TRÁMITE ==================== -->
+            <section class="view" id="view-categorias" hidden>
+                <div class="page-header">
+                    <div>
+                        <span class="eyebrow">CATÁLOGOS</span>
+                        <h1>Tipos de trámite</h1>
+                        <p>Catálogo de trámites disponibles y su volumen de solicitudes.</p>
+                    </div>
+                </div>
+
+                <div class="catalog-grid" id="catalogGrid"></div>
+            </section>
+
+            <!-- ==================== VISTA: REPORTES ==================== -->
+            <section class="view" id="view-reportes" hidden>
+                <div class="page-header">
+                    <div>
+                        <span class="eyebrow">ANÁLISIS</span>
+                        <h1>Reportes</h1>
+                        <p>Resumen de solicitudes por estado, prioridad y trámite.</p>
+                    </div>
+                </div>
+
+                <div class="report-grid" id="reportGrid"></div>
+            </section>
+
+            <footer class="app-footer">
+                <span>Trabajo Social · Control Escolar</span>
+                <span>Gestión local de solicitudes</span>
+            </footer>
+        </main>
+    </div>
+
+    <dialog class="modal" id="requestModal">
+        <form id="requestForm" class="modal__content">
+            <header class="modal__header">
+                <div>
+                    <span class="eyebrow">GESTIÓN DE CASOS</span>
+                    <h2 id="modalTitle">Nueva solicitud</h2>
+                    <p>Registra los datos para dar seguimiento al caso.</p>
+                </div>
+                <button type="button" class="icon-button" id="closeModalBtn"
+                    aria-label="Cerrar formulario">X</button>
+            </header>
+
+            <input type="hidden" id="requestId">
+
+            <div class="form-grid">
+                <label class="form-field form-field--full">
+                    <span>Nombre del alumno *</span>
+                    <input type="text" id="studentName" maxlength="150" required
+                        placeholder="Nombre completo">
+                </label>
+
+                <label class="form-field">
+                    <span>Matrícula</span>
+                    <input type="text" id="studentEnrollment" maxlength="50"
+                        placeholder="Número de matrícula">
+                </label>
+
+                <label class="form-field">
+                    <span>Tipo de trámite *</span>
+                    <select id="requestCategory" required>
+                        <option value="cartas">Cartas y constancias</option>
+                        <option value="correcciones">Corrección de datos</option>
+                        <option value="desfase">Desfase académico</option>
+                        <option value="recibos">Recibos y pagos</option>
+                        <option value="especial">Caso especial</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </label>
+
+                <label class="form-field form-field--full">
+                    <span>Descripción *</span>
+                    <textarea id="requestDescription" maxlength="2000" rows="4"
+                        required placeholder="Describe la solicitud..."></textarea>
+                </label>
+
+                <label class="form-field">
+                    <span>Responsable</span>
+                    <input type="text" id="requestAssignee" maxlength="100"
+                        placeholder="Empleado responsable">
+                </label>
+
+                <label class="form-field">
+                    <span>Prioridad</span>
+                    <select id="requestPriority">
+                        <option value="normal">Normal</option>
+                        <option value="baja">Baja</option>
+                        <option value="alta">Alta</option>
+                        <option value="urgente">Urgente</option>
+                    </select>
+                </label>
+
+                <label class="form-field">
+                    <span>Fecha límite</span>
+                    <input type="date" id="requestDueDate">
+                </label>
+
+                <label class="form-field">
+                    <span>Estado</span>
+                    <select id="requestStatus">
+                        <option value="pendiente">Pendiente</option>
+                        <option value="proceso">En proceso</option>
+                        <option value="espera">En espera</option>
+                        <option value="resuelto">Resuelto</option>
+                    </select>
+                </label>
+
+                <label class="form-field form-field--full">
+                    <span>Notas de seguimiento</span>
+                    <textarea id="requestNotes" maxlength="3000" rows="3"
+                        placeholder="Observaciones del caso..."></textarea>
+                </label>
+            </div>
+
+            <footer class="modal__footer">
+                <div class="modal__footer-left">
+                    <button type="button" class="button button--secondary"
+                        id="closeRequestBtn" hidden>Cerrar solicitud</button>
+                </div>
+
+                <div class="modal__footer-actions">
+                    <button type="button" class="button button--secondary"
+                        id="cancelModalBtn">Cancelar</button>
+                    <button type="submit" class="button button--primary">
+                        Guardar solicitud
+                    </button>
+                </div>
+            </footer>
+        </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/utils.js" defer></script>
+    <script src="js/storage.js" defer></script>
+    <script src="js/seed.js" defer></script>
+    <script src="js/solicitudes.js" defer></script>
+    <script src="js/kanban.js" defer></script>
+    <script src="js/views.js" defer></script>
+    <script src="js/excel.js" defer></script>
+    <script src="js/app.js" defer></script>
+</body>
+</html>
