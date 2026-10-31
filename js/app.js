@@ -201,20 +201,27 @@ window.App = (() => {
             window.Solicitudes.search(getFilters())
         );
 
-        // El tablero kanban NO muestra las solicitudes cerradas.
-        const openRequests = requests.filter(
-            request => !request.closed
-        );
+        // El tablero NO muestra las solicitudes cerradas a menos
+        // que se active el filtro "Cerradas".
+        const boardRequests = showClosedBoard
+            ? requests
+            : requests.filter(request => !request.closed);
 
-        window.Kanban.render(openRequests);
+        window.Kanban.render(boardRequests);
 
-        window.Views.renderTable(requests, {
+        window.Views.renderTable(boardRequests, {
             body: "#workspaceTableBody",
             empty: "#workspaceEmpty"
         });
 
+        const allRequests = sortRequests(
+            window.Solicitudes.getAll()
+        );
+
         window.Views.renderTable(
-            sortRequests(window.Solicitudes.getAll())
+            showClosed
+                ? allRequests
+                : allRequests.filter(request => !request.closed)
         );
 
         window.Views.renderCatalog();
@@ -346,6 +353,8 @@ window.App = (() => {
     }
 
     let boardMode = "kanban";
+    let showClosed = false;
+    let showClosedBoard = false;
 
     function setBoardMode(mode) {
         boardMode = mode === "tabla" ? "tabla" : "kanban";
@@ -451,6 +460,28 @@ window.App = (() => {
         );
 
         $("#sortOrder").addEventListener("change", refresh);
+
+        $("#toggleClosedTable").addEventListener("click", () => {
+            showClosed = !showClosed;
+
+            $("#toggleClosedTable").setAttribute(
+                "aria-pressed",
+                String(showClosed)
+            );
+
+            refresh();
+        });
+
+        $("#toggleClosedBoard").addEventListener("click", () => {
+            showClosedBoard = !showClosedBoard;
+
+            $("#toggleClosedBoard").setAttribute(
+                "aria-pressed",
+                String(showClosedBoard)
+            );
+
+            refresh();
+        });
 
         $("#btnKanbanView").addEventListener("click", () => {
             setBoardMode("kanban");
