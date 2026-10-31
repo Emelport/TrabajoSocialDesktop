@@ -164,16 +164,13 @@
     -webkit-line-clamp: 1;
 }
 
-.request-card__description {
-    display: -webkit-box;
-    margin-bottom: 9px;
-    overflow: hidden;
-    color: #68758a;
-    font-size: 11px;
-    line-height: 1.45;
-    overflow-wrap: anywhere;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+.request-card__due {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+    color: #7b8799;
+    font-size: 10px;
 }
 
 .request-card__category {
@@ -186,41 +183,6 @@
     border-radius: 5px;
     font-size: 10px;
     overflow-wrap: anywhere;
-}
-
-.request-card__footer {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding-top: 8px;
-    border-top: 1px solid #edf0f5;
-}
-
-.request-card__meta {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-}
-
-.request-card__assignee {
-    max-width: 100%;
-    color: #7b8799;
-    font-size: 10px;
-    overflow-wrap: anywhere;
-}
-
-.request-card__created {
-    color: #9aa4b5;
-    font-size: 9.5px;
-    font-weight: 600;
-}
-
-.request-card__due {
-    color: #7b8799;
-    font-size: 10px;
 }
 
 .request-card__due--overdue {

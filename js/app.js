@@ -3,20 +3,97 @@
 window.App = (() => {
     const { $ } = window.AppUtils;
 
+    // Se registra en la consola (F12) y en el pie del menú lateral
+    // para verificar qué versión de los archivos está cargando el
+    // navegador.
+    const APP_BUILD = "2026-10-31.5";
+
+    /* ---------------- Utilidades defensivas ----------------
+     * Si el navegador carga archivos desactualizados (caché) y
+     * falta un elemento del HTML, la aplicación avisa en consola
+     * pero NUNCA se rompe: el resto sigue funcionando.
+     */
+
+    function on(selector, event, handler) {
+        const element = $(selector);
+
+        if (!element) {
+            console.warn(
+                `[Control Escolar] Falta el elemento "${selector}"; se omite el evento "${event}".`
+            );
+            return;
+        }
+
+        element.addEventListener(event, handler);
+    }
+
+    function value(selector, fallback = "") {
+        return $(selector)?.value ?? fallback;
+    }
+
+    function setText(selector, text) {
+        const element = $(selector);
+        if (element) element.textContent = text;
+    }
+
+    function setHidden(selector, hidden) {
+        const element = $(selector);
+        if (element) element.hidden = hidden;
+    }
+
+    function setAttr(selector, name, attrValue) {
+        const element = $(selector);
+        if (element) element.setAttribute(name, attrValue);
+    }
+
+    function renderSafely(name, render) {
+        try {
+            render();
+        } catch (error) {
+            console.error(
+                `[Control Escolar] Error al actualizar la vista "${name}":`,
+                error
+            );
+        }
+    }
+
     let defaultStatus = "pendiente";
 
     function getFormData() {
         return {
-            studentName: $("#studentName").value,
-            studentEnrollment: $("#studentEnrollment").value,
-            category: $("#requestCategory").value,
-            description: $("#requestDescription").value,
-            assignee: $("#requestAssignee").value,
-            priority: $("#requestPriority").value,
-            dueDate: $("#requestDueDate").value,
-            status: $("#requestStatus").value,
-            notes: $("#requestNotes").value
+            studentName: value("#studentName"),
+            studentEnrollment: value("#studentEnrollment"),
+            category: value("#requestCategory"),
+            description: value("#requestDescription"),
+            assignee: value("#requestAssignee"),
+            priority: value("#requestPriority"),
+            dueDate: value("#requestDueDate"),
+            status: value("#requestStatus"),
+            notes: value("#requestNotes")
         };
+    }
+
+    /* Muestra bajo el selector de tipo la lista de documentos que
+     * el alumno debe entregar cuando ese trámite los requiere. */
+    function updateDocsHint() {
+        const hint = $("#requestDocsHint");
+
+        if (!hint) return;
+
+        const docs = window.Tipos.documentsOf(
+            $("#requestCategory")?.value
+        );
+
+        if (docs.length > 0) {
+            hint.innerHTML =
+                `📄 Documentos requeridos: <strong>${window.AppUtils.escapeHTML(
+                    docs.join(" · ")
+                )}</strong>`;
+            hint.hidden = false;
+        } else {
+            hint.hidden = true;
+            hint.innerHTML = "";
+        }
     }
 
     function setFormData(request) {
@@ -27,7 +104,7 @@ window.App = (() => {
         $("#studentEnrollment").value =
             request?.studentEnrollment || "";
         $("#requestCategory").value =
-            request?.category || "cartas";
+            request?.category || window.Tipos.getDefaultKey();
         $("#requestDescription").value =
             request?.description || "";
         $("#requestAssignee").value =
@@ -41,18 +118,24 @@ window.App = (() => {
         $("#requestNotes").value =
             request?.notes || "";
 
-        $("#deleteRequestBtn").hidden = !hasRequest;
-        $("#closeRequestBtn").hidden = !hasRequest;
+        updateDocsHint();
+
+        setHidden("#deleteRequestBtn", !hasRequest);
+        setHidden("#closeRequestBtn", !hasRequest);
 
         if (hasRequest) {
-            $("#closeRequestBtn").textContent = request.closed
-                ? "Reabrir solicitud"
-                : "Cerrar solicitud";
+            setText(
+                "#closeRequestBtn",
+                request.closed
+                    ? "Reabrir solicitud"
+                    : "Cerrar solicitud"
+            );
         }
 
-        $("#modalTitle").textContent = hasRequest
-            ? "Editar solicitud"
-            : "Nueva solicitud";
+        setText(
+            "#modalTitle",
+            hasRequest ? "Editar solicitud" : "Nueva solicitud"
+        );
     }
 
     function closeRequest(id) {
@@ -89,21 +172,21 @@ window.App = (() => {
         refresh();
     }
 
-    function openNewModal(status = "pendiente") {
+    function openNewModal(status = "pendiente", category = "") {
         defaultStatus = status;
 
         const form = $("#requestForm");
-        form.reset();
+        form?.reset();
 
         setFormData({
             status,
-            category: "cartas",
+            category: category || window.Tipos.getDefaultKey(),
             priority: "normal"
         });
 
-        $("#requestModal").showModal();
+        $("#requestModal")?.showModal();
 
-        $("#studentName").focus();
+        $("#studentName")?.focus();
     }
 
     function openEditModal(id) {
@@ -119,13 +202,13 @@ window.App = (() => {
         }
 
         setFormData(request);
-        $("#requestModal").showModal();
+        $("#requestModal")?.showModal();
     }
 
     function closeModal() {
         const modal = $("#requestModal");
 
-        if (modal.open) {
+        if (modal?.open) {
             modal.close();
         }
     }
@@ -133,18 +216,18 @@ window.App = (() => {
     function renderStats() {
         const stats = window.Solicitudes.getStats();
 
-        $("#statTotal").textContent = stats.total;
-        $("#statPending").textContent = stats.pending;
-        $("#statProgress").textContent = stats.progress;
-        $("#statResolved").textContent = stats.resolved;
-        $("#navTotal").textContent = stats.total;
+        setText("#statTotal", stats.total);
+        setText("#statPending", stats.pending);
+        setText("#statProgress", stats.progress);
+        setText("#statResolved", stats.resolved);
+        setText("#navTotal", stats.total);
     }
 
     function getFilters() {
         return {
-            query: $("#searchInput").value,
-            category: $("#filterCategory").value,
-            priority: $("#filterPriority").value
+            query: value("#searchInput"),
+            category: value("#filterCategory"),
+            priority: value("#filterPriority")
         };
     }
 
@@ -155,8 +238,7 @@ window.App = (() => {
         baja: 3
     };
 
-    function sortRequests(list) {
-        const mode = $("#sortOrder").value;
+    function sortRequests(list, mode = value("#sortOrder", "recent")) {
         const sorted = [...list];
 
         switch (mode) {
@@ -196,6 +278,83 @@ window.App = (() => {
         return sorted;
     }
 
+    /* ---------------- Vista: Solicitudes ---------------- */
+
+    let solPage = 1;
+    const SOL_PAGE_SIZE = 8;
+
+    function getSolRequests() {
+        const requests = window.Solicitudes.search({
+            query: value("#solSearchInput"),
+            category: value("#solFilterCategory"),
+            status: value("#solFilterStatus")
+        });
+
+        return sortRequests(
+            showClosed
+                ? requests
+                : requests.filter(request => !request.closed),
+            value("#solSortOrder", "recent")
+        );
+    }
+
+    function renderSolicitudes() {
+        const requests = getSolRequests();
+        const totalPages = Math.max(
+            1,
+            Math.ceil(requests.length / SOL_PAGE_SIZE)
+        );
+
+        if (solPage > totalPages) {
+            solPage = totalPages;
+        }
+
+        const start = (solPage - 1) * SOL_PAGE_SIZE;
+        const pageRows = requests.slice(start, start + SOL_PAGE_SIZE);
+
+        window.Views.renderTable(pageRows, {
+            body: "#solicitudesTableBody",
+            empty: "#solicitudesEmpty"
+        });
+
+        const emptyBox = $("#solicitudesEmpty");
+        const hasAny = window.Solicitudes.getAll().length > 0;
+
+        if (emptyBox) {
+            const message = emptyBox.querySelector("p");
+            const createButton =
+                emptyBox.querySelector(".js-new-request");
+
+            if (message) {
+                message.textContent = hasAny
+                    ? "No hay solicitudes que coincidan con los filtros."
+                    : "No hay solicitudes registradas.";
+            }
+
+            if (createButton) {
+                createButton.hidden = hasAny;
+            }
+        }
+
+        window.Views.renderPagination({
+            container: "#solicitudesPagination",
+            page: solPage,
+            total: totalPages,
+            onChange: page => {
+                solPage = page;
+                renderSolicitudes();
+            }
+        });
+
+        const counter = $("#solResultsCount");
+
+        if (counter) {
+            counter.hidden = requests.length === 0;
+            counter.textContent =
+                `Mostrando ${pageRows.length} de ${requests.length} solicitud(es)`;
+        }
+    }
+
     function refresh() {
         const requests = sortRequests(
             window.Solicitudes.search(getFilters())
@@ -207,26 +366,28 @@ window.App = (() => {
             ? requests
             : requests.filter(request => !request.closed);
 
-        window.Kanban.render(boardRequests);
+        // Cada vista se actualiza por separado: si una falla,
+        // las demás siguen mostrando información.
+        renderSafely("tablero", () => {
+            window.Kanban.render(boardRequests);
 
-        window.Views.renderTable(boardRequests, {
-            body: "#workspaceTableBody",
-            empty: "#workspaceEmpty"
+            window.Views.renderTable(boardRequests, {
+                body: "#workspaceTableBody",
+                empty: "#workspaceEmpty"
+            });
         });
 
-        const allRequests = sortRequests(
-            window.Solicitudes.getAll()
+        renderSafely("solicitudes", renderSolicitudes);
+        renderSafely("catálogo de tipos", () =>
+            window.Tipos.renderTable()
         );
-
-        window.Views.renderTable(
-            showClosed
-                ? allRequests
-                : allRequests.filter(request => !request.closed)
+        renderSafely("resumen de trámites", () =>
+            window.Views.renderCatalog()
         );
-
-        window.Views.renderCatalog();
-        window.Views.renderReports();
-        renderStats();
+        renderSafely("reportes", () =>
+            window.Views.renderReports()
+        );
+        renderSafely("estadísticas", renderStats);
     }
 
     function clearFilters() {
@@ -292,24 +453,26 @@ window.App = (() => {
 
     function toggleSidebar() {
         const app = $(".app");
-        const button = $("#menuToggle");
 
-        app.classList.toggle("sidebar-collapsed");
+        app?.classList.toggle("sidebar-collapsed");
 
-        const collapsed = app.classList.contains("sidebar-collapsed");
+        const collapsed = app?.classList.contains("sidebar-collapsed");
 
-        button.setAttribute("aria-expanded", String(!collapsed));
+        setAttr("#menuToggle", "aria-expanded", String(!collapsed));
     }
 
     function initDate() {
-        $("#currentDate").textContent =
-            window.AppUtils.formatCurrentDate();
+        setText(
+            "#currentDate",
+            window.AppUtils.formatCurrentDate()
+        );
     }
 
     const viewMeta = {
         dashboard: "Inicio",
         tablero: "Tablero Kanban",
         solicitudes: "Solicitudes",
+        resumen: "Resumen",
         categorias: "Tipos de trámite",
         reportes: "Reportes"
     };
@@ -331,11 +494,11 @@ window.App = (() => {
             );
         });
 
-        $("#breadcrumbSection").textContent = viewMeta[name];
+        setText("#breadcrumbSection", viewMeta[name]);
 
         if (window.innerWidth <= 760) {
-            $(".app").classList.add("sidebar-collapsed");
-            $("#menuToggle").setAttribute("aria-expanded", "false");
+            $(".app")?.classList.add("sidebar-collapsed");
+            setAttr("#menuToggle", "aria-expanded", "false");
         }
 
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -352,6 +515,14 @@ window.App = (() => {
         window.location.hash = `#/${target}`;
     }
 
+    function filterByCategory(category) {
+        $("#solFilterCategory").value = category;
+        solPage = 1;
+
+        navigate("solicitudes");
+        renderSolicitudes();
+    }
+
     let boardMode = "kanban";
     let showClosed = false;
     let showClosedBoard = false;
@@ -359,26 +530,20 @@ window.App = (() => {
     function setBoardMode(mode) {
         boardMode = mode === "tabla" ? "tabla" : "kanban";
 
-        $("#kanbanBoard").hidden = boardMode !== "kanban";
-        $("#workspaceTable").hidden = boardMode !== "tabla";
+        setHidden("#kanbanBoard", boardMode !== "kanban");
+        setHidden("#workspaceTable", boardMode !== "tabla");
 
-        $("#btnKanbanView").classList.toggle(
+        $("#btnKanbanView")?.classList.toggle(
             "view-toggle__btn--active",
             boardMode === "kanban"
         );
-        $("#btnTableView").classList.toggle(
+        $("#btnTableView")?.classList.toggle(
             "view-toggle__btn--active",
             boardMode === "tabla"
         );
 
-        $("#btnKanbanView").setAttribute(
-            "aria-pressed",
-            String(boardMode === "kanban")
-        );
-        $("#btnTableView").setAttribute(
-            "aria-pressed",
-            String(boardMode === "tabla")
-        );
+        setAttr("#btnKanbanView", "aria-pressed", String(boardMode === "kanban"));
+        setAttr("#btnTableView", "aria-pressed", String(boardMode === "tabla"));
     }
 
     function initNavigation() {
@@ -390,10 +555,7 @@ window.App = (() => {
     }
 
     function initEvents() {
-        $("#requestForm").addEventListener(
-            "submit",
-            handleSubmit
-        );
+        on("#requestForm", "submit", handleSubmit);
 
         document.querySelectorAll(".js-new-request").forEach(button => {
             button.addEventListener("click", () => {
@@ -401,17 +563,11 @@ window.App = (() => {
             });
         });
 
-        $("#closeModalBtn").addEventListener(
-            "click",
-            closeModal
-        );
+        on("#closeModalBtn", "click", closeModal);
+        on("#cancelModalBtn", "click", closeModal);
+        on("#requestCategory", "change", updateDocsHint);
 
-        $("#cancelModalBtn").addEventListener(
-            "click",
-            closeModal
-        );
-
-        $("#closeRequestBtn").addEventListener("click", () => {
+        on("#closeRequestBtn", "click", () => {
             const id = $("#requestId").value;
 
             if (!id) return;
@@ -429,65 +585,66 @@ window.App = (() => {
             }
         });
 
-        $("#deleteRequestBtn").addEventListener(
-            "click",
-            handleDelete
-        );
+        on("#deleteRequestBtn", "click", handleDelete);
+        on("#menuToggle", "click", toggleSidebar);
 
-        $("#menuToggle").addEventListener(
-            "click",
-            toggleSidebar
-        );
+        on("#searchInput", "input", refresh);
+        on("#filterCategory", "change", refresh);
+        on("#filterPriority", "change", refresh);
+        on("#clearFiltersBtn", "click", clearFilters);
+        on("#sortOrder", "change", refresh);
 
-        $("#searchInput").addEventListener(
-            "input",
-            refresh
-        );
+        on("#solSearchInput", "input", () => {
+            solPage = 1;
+            renderSolicitudes();
+        });
 
-        $("#filterCategory").addEventListener(
-            "change",
-            refresh
-        );
+        on("#solFilterStatus", "change", () => {
+            solPage = 1;
+            renderSolicitudes();
+        });
 
-        $("#filterPriority").addEventListener(
-            "change",
-            refresh
-        );
+        on("#solFilterCategory", "change", () => {
+            solPage = 1;
+            renderSolicitudes();
+        });
 
-        $("#clearFiltersBtn").addEventListener(
-            "click",
-            clearFilters
-        );
+        on("#solSortOrder", "change", () => {
+            solPage = 1;
+            renderSolicitudes();
+        });
 
-        $("#sortOrder").addEventListener("change", refresh);
+        on("#clearSolFiltersBtn", "click", () => {
+            $("#solSearchInput").value = "";
+            $("#solFilterStatus").value = "";
+            $("#solFilterCategory").value = "";
+            $("#solSortOrder").value = "recent";
+            solPage = 1;
+            renderSolicitudes();
+        });
 
-        $("#toggleClosedTable").addEventListener("click", () => {
+        on("#toggleClosedTable", "click", () => {
             showClosed = !showClosed;
+            solPage = 1;
 
-            $("#toggleClosedTable").setAttribute(
-                "aria-pressed",
-                String(showClosed)
-            );
+            setAttr("#toggleClosedTable", "aria-pressed", String(showClosed));
 
             refresh();
         });
 
-        $("#toggleClosedBoard").addEventListener("click", () => {
+        on("#toggleClosedBoard", "click", () => {
             showClosedBoard = !showClosedBoard;
 
-            $("#toggleClosedBoard").setAttribute(
-                "aria-pressed",
-                String(showClosedBoard)
-            );
+            setAttr("#toggleClosedBoard", "aria-pressed", String(showClosedBoard));
 
             refresh();
         });
 
-        $("#btnKanbanView").addEventListener("click", () => {
+        on("#btnKanbanView", "click", () => {
             setBoardMode("kanban");
         });
 
-        $("#btnTableView").addEventListener("click", () => {
+        on("#btnTableView", "click", () => {
             setBoardMode("tabla");
         });
 
@@ -498,17 +655,81 @@ window.App = (() => {
         });
 
         // Cerrar al pulsar fuera del contenido del diálogo.
-        $("#requestModal").addEventListener("click", event => {
+        on("#requestModal", "click", event => {
             if (event.target === $("#requestModal")) {
                 closeModal();
             }
         });
 
         initNavigation();
-        window.Kanban.initDragAndDrop();
+        window.Kanban?.initDragAndDrop();
+    }
+
+    /* ---------------- Validación de archivos ---------------- */
+
+    // Si el navegador carga un index.html antiguo (por ejemplo, una
+    // copia en otra carpeta o la caché), faltan secciones de las
+    // vistas y el contenido sale en blanco. En ese caso se muestra
+    // un aviso visible en lugar de dejar la pantalla vacía.
+    function validateViews() {
+        const missing = Object.keys(viewMeta).filter(
+            name => !document.getElementById(`view-${name}`)
+        );
+
+        if (!missing.length) return;
+
+        const banner = document.createElement("div");
+        banner.className = "app-warning";
+
+        banner.innerHTML = `
+            <strong>Index.html desactualizado.</strong>
+            <span>
+                El navegador abrió una versión antigua de la interfaz
+                (faltan las vistas: ${escapeHTMLText(missing.join(", "))}).
+                Recarga con <b>Ctrl + F5</b> y revisa que la barra de
+                direcciones apunte a la carpeta más reciente del proyecto
+                (<code>...\ssocial app\index.html</code>).
+            </span>
+        `;
+
+        $(".main")?.prepend(banner);
+
+        console.error(
+            "[Control Escolar] index.html desactualizado. Faltan las vistas:",
+            missing
+        );
+    }
+
+    function escapeHTMLText(value) {
+        return window.AppUtils.escapeHTML(value);
     }
 
     function init() {
+        console.info(
+            `[Control Escolar] app.js cargado (build ${APP_BUILD}).`
+        );
+
+        setText(
+            "#appVersion",
+            `Interfaz v${APP_BUILD} · JS operativo`
+        );
+
+        validateViews();
+
+        // La aplicación siempre arranca en la pantalla principal,
+        // sin importar qué vista traiga la URL.
+        if (window.location.hash) {
+            try {
+                history.replaceState(
+                    null,
+                    "",
+                    window.location.pathname + window.location.search
+                );
+            } catch (error) {
+                window.location.hash = "";
+            }
+        }
+
         initDate();
         initEvents();
         refresh();
@@ -518,6 +739,7 @@ window.App = (() => {
         init,
         refresh,
         navigate,
+        filterByCategory,
         openNewModal,
         openEditModal,
         closeRequest,

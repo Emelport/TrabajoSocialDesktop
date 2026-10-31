@@ -1,13 +1,17 @@
 "use strict";
 
 window.ExcelExport = (() => {
-    const { $, categories, priorities, statuses, toast } = window.AppUtils;
+    const { $, priorities, statuses, toast } = window.AppUtils;
 
     const COLUMNS = [
         ["Folio", request => request.folio],
         ["Alumno", request => request.studentName],
         ["Matrícula", request => request.studentEnrollment],
-        ["Trámite", request => categories[request.category] ?? request.category],
+        ["Trámite", request => window.Tipos.nameOf(request.category)],
+        [
+            "Documentos requeridos",
+            request => window.Tipos.documentsOf(request.category).join(" | ")
+        ],
         ["Descripción", request => request.description],
         ["Prioridad", request => priorities[request.priority] ?? request.priority],
         ["Estado", request => statuses[request.status] ?? request.status],
@@ -31,11 +35,20 @@ window.ExcelExport = (() => {
     }
 
     function getVisibleRequests() {
-        return window.Solicitudes.search({
-            query: $("#searchInput").value,
-            category: $("#filterCategory").value,
-            priority: $("#filterPriority").value
+        const requests = window.Solicitudes.search({
+            query: $("#solSearchInput")?.value ?? "",
+            category: $("#solFilterCategory")?.value ?? "",
+            status: $("#solFilterStatus")?.value ?? ""
         });
+
+        // Se exporta lo que se ve: si el filtro "Cerradas" está
+        // desactivado, los expedientes cerrados se excluyen.
+        const showClosed =
+            $("#toggleClosedTable")?.getAttribute("aria-pressed") === "true";
+
+        return showClosed
+            ? requests
+            : requests.filter(request => !request.closed);
     }
 
     function buildCsv(requests) {

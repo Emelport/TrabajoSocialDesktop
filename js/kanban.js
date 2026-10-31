@@ -3,7 +3,6 @@
 window.Kanban = (() => {
     const {
         $,
-        categories,
         priorities,
         statuses,
         escapeHTML,
@@ -42,19 +41,27 @@ window.Kanban = (() => {
 
         const overdue = isOverdue(request.dueDate, request.status);
 
-        const assignee = request.assignee
-            ? `Responsable: ${escapeHTML(request.assignee)}`
-            : "Sin responsable";
-
-        const created = request.createdAt
-            ? `Creada: ${escapeHTML(formatDate(String(request.createdAt).slice(0, 10)))}`
-            : "";
-
-        const dueDate = request.dueDate
-            ? `<span class="request-card__due ${overdue ? "request-card__due--overdue" : ""}">
-                    ${overdue ? "Vencida: " : "Límite: "}${escapeHTML(formatDate(request.dueDate))}
+        // Solo se muestra la fecha cuando el caso ya venció.
+        // El detalle completo (descripción, responsable y fechas)
+        // queda en el tooltip y en el modal de edición.
+        const dueDate = overdue
+            ? `<span class="request-card__due request-card__due--overdue">
+                    ⚠ Vencida: ${escapeHTML(formatDate(request.dueDate))}
                </span>`
             : "";
+
+        card.title = [
+            request.description,
+            request.assignee
+                ? `Responsable: ${request.assignee}`
+                : "",
+            request.dueDate
+                ? `Fecha límite: ${formatDate(request.dueDate)}`
+                : "",
+            request.createdAt
+                ? `Creada: ${formatDate(String(request.createdAt).slice(0, 10))}`
+                : ""
+        ].filter(Boolean).join("\n");
 
         card.innerHTML = `
             <div class="request-card__top">
@@ -71,24 +78,10 @@ window.Kanban = (() => {
             </h4>
 
             <span class="request-card__category">
-                ${escapeHTML(categories[request.category] || "Otro trámite")}
+                ${escapeHTML(window.Tipos.nameOf(request.category))}
             </span>
 
-            <p class="request-card__description">
-                ${escapeHTML(request.description)}
-            </p>
-
-            <div class="request-card__footer">
-                <div class="request-card__meta">
-                    <span class="request-card__assignee">
-                        ${assignee}
-                    </span>
-                    <span class="request-card__created">
-                        ${created}
-                    </span>
-                </div>
-                ${dueDate}
-            </div>
+            ${dueDate}
         `;
 
         card.addEventListener("click", () => {

@@ -1,14 +1,14 @@
 "use strict";
 
 window.Solicitudes = (() => {
-    const { categories, priorities, statuses } = window.AppUtils;
+    const { priorities, statuses } = window.AppUtils;
 
     function validate(data) {
         if (!data.studentName.trim()) {
             return "Escribe el nombre del alumno.";
         }
 
-        if (!data.category || !categories[data.category]) {
+        if (!data.category || !window.Tipos.has(data.category)) {
             return "Selecciona un tipo de trámite válido.";
         }
 
@@ -145,6 +145,7 @@ window.Solicitudes = (() => {
 
         const category = filters.category ?? "";
         const priority = filters.priority ?? "";
+        const status = filters.status ?? "";
 
         return requests.filter(request => {
             const matchesQuery = !query || [
@@ -163,7 +164,13 @@ window.Solicitudes = (() => {
             const matchesPriority =
                 !priority || request.priority === priority;
 
-            return matchesQuery && matchesCategory && matchesPriority;
+            const matchesStatus =
+                !status || request.status === status;
+
+            return matchesQuery &&
+                matchesCategory &&
+                matchesPriority &&
+                matchesStatus;
         });
     }
 

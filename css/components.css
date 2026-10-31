@@ -208,6 +208,104 @@
     grid-column: 1 / -1;
 }
 
+/* Checkbox dentro del formulario */
+
+.checkbox-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--color-surface-soft, #f5f7fb);
+    border: 1px solid var(--color-border, #dde3ec);
+    border-radius: var(--radius-md, 10px);
+}
+
+.checkbox-field input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--color-primary, #003b8e);
+    flex-shrink: 0;
+}
+
+.checkbox-field small {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--color-text-muted, #68758a);
+}
+
+/* Lista de documentos requeridos (modal de tipos) */
+
+.docs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.docs-list__empty {
+    margin: 0;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--color-text-muted, #68758a);
+}
+
+.docs-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 7px 12px;
+    font-size: 13px;
+    background: #ffffff;
+    border: 1px solid var(--color-border, #dde3ec);
+    border-radius: var(--radius-md, 10px);
+}
+
+.docs-item__remove {
+    padding: 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-danger, #b42318);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.docs-add-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.docs-add-row input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 14px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--color-text, #1b2430);
+    background: #ffffff;
+    border: 1px solid var(--color-border, #dde3ec);
+    border-radius: var(--radius-md, 10px);
+}
+
+/* Nota de documentos en el modal de solicitudes */
+
+.docs-hint {
+    grid-column: 1 / -1;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #147954;
+    background: #e3f6ee;
+    border: 1px solid #bfe8d7;
+    border-radius: var(--radius-md, 10px);
+}
+
 /* Ventana modal */
 
 .modal {
